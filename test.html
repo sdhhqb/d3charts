@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Line Chart</title>
+    <link rel="stylesheet" type="text/css" href="./css/styles.css"/>
+    <style>
+    	.container {
+    		overflow: hidden;
+    	}
+    	.item {
+    		width: 50%;
+    		float: left;
+    	}
+    </style>
+</head>
+<body>
+	<div class="container">
+		<div class="item">
+			<span>line</span>
+			<input type="button" value="update" id="updateLine">	
+			<div class="d3chart" id="lineChart"></div>
+		</div>
+		<div class="item">
+			<span>bar</span>
+			<input type="button" value="update" id="updateBar">
+			<div class="d3chart" id="barChart"></div>
+		</div>
+	</div>
+
+<script type="text/javascript" src="./lib/d3.js"></script>
+<script src="./lib/require.js"></script>
+<script src="./dist/d3charts.js"></script><!-- 注释后加载未打包的代码 -->
+<script>
+	require.config({
+        paths: {
+            d3charts: './dist'	//注释后加载未打包的代码
+            // d3charts: './src'	//取消注释加载未打包的代码
+        }
+    });
+	require(
+		[
+			'd3charts',		//注释后加载未打包的代码
+			// 'd3charts/d3charts',	//取消注释加载未打包的代码
+			'd3charts/chart/line',
+			'd3charts/chart/pie'
+		],
+		function (d3charts) {
+			console.log(d3charts);
+
+			// 连线图
+			var chart1 = d3charts.init(document.getElementById('lineChart'));
+			var option1 = {
+				width: 600,
+				height: 300,
+				margins: {top: 30, left: 40, right: 20, bottom: 30},
+				xAxis: {
+					// type: 'value',
+					// data: [1,2,3,4,5,6,7,8,9,10]
+					boundaryGap: false,
+					data: ['温度','tyj','空气','湿度','6567','abc']
+				},
+				yAxis: {
+					data: [1200,1800]
+				},
+				series: [
+					{
+						name:'蓝',
+			            type:'line',
+			            noDots: true,
+			            data:[1518, 1522, 1329, 1589, 1676, 1432, 1481, 1484, 1605, 1730]
+					},
+					{
+						name:'蓝',
+			            type:'line',
+			            data:[1770, 1630, 1410, 1508, 1526, 1432, 1481, 1500, 1605, 1730]
+					}
+				]
+			};
+			chart1.setOption(option1);
+			
+			// 柱状图
+			var chart2 = d3charts.init(document.getElementById('barChart'));
+			var option2 = {
+				width: 600,
+				height: 300,
+				margins: {top: 30, left: 40, right: 20, bottom: 30},
+				xAxis: {
+					data: [1,2,3,4,5,6,7,8]
+					// data: ['温度','时间','空气','湿度','abc','123456']
+				},
+				yAxis: {
+					data: [1,2,3,4,5,6,7,8]
+				},
+				series: [
+					{
+						name:'蓝',
+			            type:'bar',
+			            data:[2,3,5,3,6,7,3,1]
+					}
+				]
+			};
+			chart2.setOption(option2);
+
+			// 更新line
+			function updateLine () {
+				for (var i = 0; i < option1.series.length; i++) {
+					option1.series[i].data = [];
+					for (var j = 0; j < option1.xAxis.data.length; j++) {
+						option1.series[i].data.push(Math.floor(Math.random() * 400) + 1330);
+					}
+				}
+				chart1.setOption(option1, true);
+			}
+			document.getElementById('updateLine').addEventListener('click', updateLine);
+			// 更新bar
+			function updateBar () {
+				for (var i = 0; i < option2.series.length; i++) {
+					option2.series[i].data = [];
+					for (var j = 0; j < option2.xAxis.data.length; j++) {
+						option2.series[i].data.push(Math.floor(Math.random() * 6) + 1);
+					}
+				}
+				chart2.setOption(option2, true);
+			}
+			document.getElementById('updateBar').addEventListener('click', updateBar);
+			
+		}
+	)
+</script>
+</body>
+</html>
